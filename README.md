@@ -16,15 +16,30 @@ But it is know for all of us, that the facebook's learning material is amazing (
 So I will be going throw different steps in my project ( I hope this), keep each big step in a branch,
 and the last one merged onto master:
 
+## How to use:
+1 Clone this repo.
+2 Run npm install where you cloned ths repo.
+3 Start with:
+```
+node server.js
+```
+4 In your browser type this url:
+````
+http://localhost:3000
+````
+5 In Master will be the last state. And in special branchs, like for example usingFlux,
+some important steps.
+
+
 ## Steps
-1. Startup
-..* Read a lot of react posts, trying to keep sane. (almost done)
-..* Copy a project and adapt it for my running training app. done
-..* The app and it api is served with express. done
-..* The app show a list of chronologically sorted trainings. done
-..* The app highlights the nearest next training. done
-..* The app center the training lists in the nearest next training. bug
-..* the app have hardcoded the race day. done
+1 Startup
+  * Read a lot of react posts, trying to keep sane. (almost done)
+  * Copy a project and adapt it for my running training app. done
+  * The app and it api is served with express. done
+  * The app show a list of chronologically sorted trainings. done
+  * The app highlights the nearest next training. done
+  * The app center the training lists in the nearest next training. bug
+  * the app have hardcoded the race day. done
 
 ##backlog
 * Use Flux.
@@ -41,3 +56,28 @@ and the last one merged onto master:
 * Add trainer notes.
 * Add Gulp.
 * Host in some PaaS.
+
+## License
+
+(The MIT License)
+
+Copyright (c) 2016 Pablo Benito &lt;bioingbenito@gmail.com&gt;
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
