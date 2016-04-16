@@ -1,0 +1,32 @@
+{
+  "name": "react-run-training",
+  "version": "0.0.0",
+  "description": "Code for try react with a runner training app.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reactjs/react-tutorial.git"
+  },
+  "keywords": [
+    "react",
+    "trying",
+    "running",
+    "training"
+  ],
+  "author": "pelicanorojo",
+  "bugs": {
+    "url": "https://github.com/pelicanorojo/react-training/issues"
+  },
+  "homepage": "https://github.com/pelicanorojo/react-training",
+  "engines" : {
+    "node" : "0.12.x"
+  }
+}

@@ -1,0 +1,44 @@
+.workout-intervals {
+  width: 100%;
+}
+
+.workout-interval {
+  display: inline-block;
+  height: 200px;
+}
+
+.type-middle, .type-warmUp {
+  border-right-width: 1px;
+  border-right-style: dotted;
+  border-right-color: gray;
+}
+
+.zone {
+  position: relative;
+  width: 100%;
+  height: 50px;
+}
+
+.zone-blue {
+  margin-top: 150px;
+  background-color: blue;
+}
+
+.zone-green {
+  margin-top: 100px;
+  background-color: green;
+}
+
+.zone-yellow {
+  margin-top: 50px;
+  background-color: yellow;
+}
+
+.zone-red {
+  margin-top: 0;
+  background-color: red;
+}
+
+.zone span {
+  position: absolute;
+}
