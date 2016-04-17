@@ -1,92 +1,91 @@
 (function () {
-var
-  EventEmitter = window.EventEmitter,
-  DATEFORMAT = window.DATEFORMAT,
-  TODAY = window.TODAY,
-  Helpers = window.Helpers,
-  LASTWORKOUTTARGETDATE = moment("2016-04-09T00:00:00");
+  let
+    EventEmitter = window.EventEmitter,
+    DATEFORMAT = window.DATEFORMAT,
+    TODAY = window.TODAY,
+    Helpers = window.Helpers,
+    LASTWORKOUTTARGETDATE = moment("2016-06-19T00:00:00");
 
 
-var WorkoutsPage = React.createClass({
-  getInitialState: function() {
-    return {
-      workoutsDates: [],
-      selectedWorkout: null,
-      selectedWorkoutInd: null
-    };
-  },
-  loadWorkoutDetail: function (workoutInd) {
-    this.setState({selectedWorkoutInd: workoutInd});
+  let WorkoutsPage = React.createClass({
+    getInitialState () {
+      return {
+        workoutsDates: [],
+        selectedWorkout: null,
+        selectedWorkoutInd: null
+      };
+    },
+    loadWorkoutDetail (workoutInd) {
+      this.setState({selectedWorkoutInd: workoutInd});
 
-    $.ajax({
-      url: this.props.url + '/' + workoutInd,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        data.scheduledDate = moment(moment(data.scheduledDate).toDate().getTime() + this.state.raceShift, 'x');
-        this.setState({selectedWorkout: data})
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.detailUrl, status, err.toString());
-      }.bind(this)
-    });
-  },
-  componentDidMount: function() {
-    EventEmitter.subscribe( 'onSelectWorkout', this.loadWorkoutDetail );
+      $.ajax({
+        url: this.props.url + '/' + workoutInd,
+        dataType: 'json',
+        cache: false,
+        success: function(data) {
+          data.scheduledDate = moment(moment(data.scheduledDate).toDate().getTime() + this.state.raceShift, 'x');
+          this.setState({selectedWorkout: data})
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.error(this.props.detailUrl, status, err.toString());
+        }.bind(this)
+      });
+    },
+    componentDidMount () {
+      EventEmitter.subscribe( 'onSelectWorkout', this.loadWorkoutDetail );
 
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        var lastWorkout = data[0];
-        var raceShift = moment(LASTWORKOUTTARGETDATE).diff(lastWorkout.scheduledDate);
-        _.each(data, function(workoutDate) {
-          workoutDate.scheduledDate = moment(moment(workoutDate.scheduledDate).toDate().getTime() + raceShift, 'x');
-        });
+      $.ajax({
+        url: this.props.url,
+        dataType: 'json',
+        cache: false,
+        success: function(data) {
+          let lastWorkout = data[0];
+          let raceShift = moment(LASTWORKOUTTARGETDATE).diff(lastWorkout.scheduledDate);
+          _.each(data, function(workoutDate) {
+            workoutDate.scheduledDate = moment(moment(workoutDate.scheduledDate).toDate().getTime() + raceShift, 'x');
+          });
 
-        this.setState({workoutsDates: data, raceShift: raceShift});
-        var nearestWorkoutInd = this.findTodayOrNextWorkout()
-        this.loadWorkoutDetail(nearestWorkoutInd);
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  },
-  findTodayOrNextWorkout: function () {
-    var today = moment(moment().format('YYYY-MM-DD')).format('x');
-    var workoutsDates = this.state.workoutsDates;
-    var i = workoutsDates.length - 1;
-    var workoutDate, nearestWorkout;
+          this.setState({workoutsDates: data, raceShift: raceShift});
+          let nearestWorkoutInd = this.findTodayOrNextWorkout()
+          EventEmitter.dispatch( 'onSelectWorkout', nearestWorkoutInd);
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.error(this.props.url, status, err.toString());
+        }.bind(this)
+      });
+    },
+    findTodayOrNextWorkout () {
+      let today = moment(moment().format('YYYY-MM-DD')).format('x');
+      let workoutsDates = this.state.workoutsDates;
+      let i = workoutsDates.length - 1;
+      let workoutDate, nearestWorkout;
 
-    while ( i >= 0 && !nearestWorkout ) {
-      workoutDate = workoutsDates[i];
-      if ( moment(workoutDate.scheduledDate).format('x') >= today ) {
-        nearestWorkout = workoutDate;
+      while ( i >= 0 && !nearestWorkout ) {
+        workoutDate = workoutsDates[i];
+        if ( moment(workoutDate.scheduledDate).format('x') >= today ) {
+          nearestWorkout = workoutDate;
+        }
+        i--;
       }
-      i--;
-    }
 
-    return nearestWorkout && nearestWorkout.workoutInd || 0;
-  },
-  render: function () {
-    return (
-      <div>
-        <WorkoutsNavbar />
-        <div className="container-fluid">
-          <div className="row" >
-            <WorkoutsSidebar workoutsDates={this.state.workoutsDates} selectedWorkoutInd={this.state.selectedWorkoutInd}/>
-            <MainContent selectedWorkout={this.state.selectedWorkout} />
+      return nearestWorkout && nearestWorkout.workoutInd || 0;
+    },
+    render () {
+      return (
+        <div>
+          <WorkoutsNavbar />
+          <div className="container-fluid">
+            <div className="row" >
+              <WorkoutsSidebarContainer workoutsDates={this.state.workoutsDates} selectedWorkoutInd={this.state.selectedWorkoutInd}/>
+              <MainContent selectedWorkout={this.state.selectedWorkout} />
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
-});
+      );
+    }
+  });
 
-var WorkoutsNavbar = React.createClass({
-  render: function () {
+  let WorkoutsNavbar = function () {
     return (
       <nav className="navbar navbar-inverse navbar-fixed-top">
         <div className="container-fluid">
@@ -114,91 +113,105 @@ var WorkoutsNavbar = React.createClass({
       </nav>
     );
   }
-});
 
-var WorkoutsSidebar = React.createClass({
-  changeWorkoutSelected: function ( top ) {
-    var
-      el = ReactDOM.findDOMNode(this),
-      $el = $(el),
-      height = $el.height();
+  let WorkoutsSidebarContainer = React.createClass({
+    changeWorkoutSelected (ind) {
+      let
+        el = ReactDOM.findDOMNode(this),
+        $el = $(el),
+        $activeDate = $el.find(`.date-${ind}`),
+        activeDateEle = $activeDate[0];
 
-    console.log( "D: changeWorkoutSelected", top)
-    $el.scrollTop( top + height/2);
-  },
-  componentDidMount: function () {
-    EventEmitter.subscribe( 'onToDateScroll', this.changeWorkoutSelected );
-  },
-  render: function () {
+      if (activeDateEle) {
+        let top = activeDateEle.offsetTop;
+        let height = $el.height();
+
+        $el.scrollTop( top - height/2);
+      }
+    },
+    componentDidMount () {
+      EventEmitter.subscribe( 'onSelectWorkout', this.changeWorkoutSelected );
+    },
+    render () {
+      let
+        props = {
+          workoutsDates: this.props.workoutsDates,
+          selectedWorkoutInd: this.props.selectedWorkoutInd
+        };
+
+      return (<WorkoutsSidebar {...props} />);
+    }
+  });
+
+  let WorkoutsSidebar =  function (props) {
     return (
       <div className="col-sm-3 col-md-2 sidebar">
-        <WorkoutsList workoutsDates={this.props.workoutsDates} selectedWorkoutInd={this.props.selectedWorkoutInd}/>
+        <WorkoutsListContainer workoutsDates={props.workoutsDates} selectedWorkoutInd={props.selectedWorkoutInd}/>
       </div>
     );
   }
-});
 
-var WorkoutDate = React.createClass({
-  onClick: function () {
-    this.props.onClick( this.props.ind );
-  },
-  render: function () {
-    return (
-      <li className={this.props.active ? "active" : ""}><a onClick={this.onClick} >{moment(this.props.scheduledDate).format(DATEFORMAT)}</a></li>
-    );
-  }
-});
+  let WorkoutDate = React.createClass({
+    onClick () {
+      this.props.onClick( this.props.ind );
+    },
+    render () {
+      return (
+        <li className={`${this.props.active? "active " : ""}${this.props.classToAdd}`}><a onClick={this.onClick} >{moment(this.props.scheduledDate).format(DATEFORMAT)}</a></li>
+      );
+    }
+  });
 
-var WorkoutsList = React.createClass({
-  getInitialState: function () {
-    return {selectedWorkoutInd: ''};
-  },
-  changeWorkout: function ( ind ) {
-    console.log( "D: componentDidUpdate", this.props);
-    console.log("changeWorkout", ind, arguments);
-    this.setState({ selectedWorkoutInd: ind });
-    EventEmitter.dispatch( 'onSelectWorkout', ind);
-  },
-  componentDidUpdate: function () {
-    var
-      dateRef = this.refs[ "date15"],
-      dateNode = ReactDOM.findDOMNode(dateRef),
-      $current = $(dateNode);
-
-    EventEmitter.dispatch( 'onToDateScroll', $current.offset().top );
-  },
-  render: function () {
-    var
-      selectedWorkoutInd = this.props.selectedWorkoutInd,
-      workoutsDates = this.props.workoutsDates.map( function ( workoutDate, ind ) {
-        return (
-          <WorkoutDate
-            ref={"date" + ind}
-            scheduledDate={workoutDate.scheduledDate}
-            key={ind}
-            active={selectedWorkoutInd === ind}
-            ind={ind}
-            onClick={this.changeWorkout}
+  let WorkoutsListContainer = React.createClass({
+    changeWorkout ( ind ) {
+      console.log( "D: componentDidUpdate", this.props);
+      console.log("changeWorkout", ind, arguments);
+      EventEmitter.dispatch( 'onSelectWorkout', ind);
+    },
+    render () {
+      return (
+        <WorkoutsList
+          workoutsDates={this.props.workoutsDates}
+          selectedWorkoutInd={this.props.selectedWorkoutInd}
+          changeWorkout={this.changeWorkout}
           />
         );
-      }.bind(this));
+      }
+  });
+
+  let WorkoutsList = function (props) {
+    let
+      selectedWorkoutInd = props.selectedWorkoutInd,
+      changeWorkout = props.changeWorkout,
+      workoutsDates = props.workoutsDates.map( function ( workoutDate ) {
+        let
+          props = {
+            scheduledDate: workoutDate.scheduledDate,
+            key: workoutDate.workoutInd,
+            active: selectedWorkoutInd === workoutDate.workoutInd,
+            ind: workoutDate.workoutInd,
+            classToAdd: `date-${workoutDate.workoutInd}`,
+            onClick: changeWorkout.bind(null, workoutDate.workoutInd)
+          };
+
+        return (
+          <WorkoutDate {...props} />
+        );
+      });
 
     return (
       <ul className="nav nav-sidebar">
         {workoutsDates}
       </ul>
     );
-  }
-});
+  };
 
+  let MainContent = function (props) {
+    let
+      detail;
 
-var MainContent = React.createClass({
-  render: function () {
-    var
-      detail = null;
-
-    if (this.props.selectedWorkout != null) {
-      detail = <WorkoutDetail selectedWorkout={this.props.selectedWorkout} />
+    if (props.selectedWorkout != null) {
+      detail = <WorkoutDetail selectedWorkout={props.selectedWorkout} />
     } else {
       detail = <EmptyWorkoutDetail />
     }
@@ -209,26 +222,23 @@ var MainContent = React.createClass({
       </div>
     );
   }
-});
 
-var EmptyWorkoutDetail = React.createClass({
-  render: function () {
+  let EmptyWorkoutDetail = function () {
     return (
       <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         Empty
       </div>
     );
   }
-});
 
-var WorkoutDetail = React.createClass({
-  render: function () {
-    var
-      workoutIntervals = this.props.selectedWorkout.intervals,
+
+  let WorkoutDetail = function (props) {
+    let
+      workoutIntervals = props.selectedWorkout.intervals,
       totalTime = workoutIntervals.reduce( function (memo, wi) { return wi.totalTimeInZone + memo;}, 0 ),
-      titleDate = moment(this.props.selectedWorkout.scheduledDate).format(DATEFORMAT),
+      titleDate = moment(props.selectedWorkout.scheduledDate).format(DATEFORMAT),
       titleTime = totalTime,
-      title = titleDate + ' , duration: ' + Helpers.secondsTosHHMMSS( titleTime );
+      title = `${titleDate} , duration: ${Helpers.secondsTosHHMMSS(titleTime)}`;
 
     return (
       <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -237,23 +247,19 @@ var WorkoutDetail = React.createClass({
       </div>
     );
   }
-});
 
-var WorkoutTitle = React.createClass({
-  render: function () {
+  let WorkoutTitle = function (props) {
     return (
-      <h1 className="page-header">{this.props.workoutTitle}</h1>
+      <h1 className="page-header">{props.workoutTitle}</h1>
     );
   }
-});
 
-var WorkoutIntervals = React.createClass({
-  render: function () {
-    var
+  let WorkoutIntervals = function (props) {
+    let
       firstOfTypes = {},
-      totalTime = this.props.workoutIntervals.reduce( function (memo, wi) { return wi.totalTimeInZone + memo;}, 0 ),
-      workoutIntervals = this.props.workoutIntervals.map( function (workoutInterval, ind) {
-        var
+      totalTime = props.workoutIntervals.reduce( function (memo, wi) { return wi.totalTimeInZone + memo;}, 0 ),
+      workoutIntervals = props.workoutIntervals.map( function (workoutInterval, ind) {
+        let
           type = workoutInterval.intervalType + workoutInterval.totalTimeInZone + workoutInterval.miCoachZone;
 
         if ( typeof firstOfTypes[type] === 'undefined'  ) {
@@ -275,27 +281,23 @@ var WorkoutIntervals = React.createClass({
     );
   }
 
-});
 
-
-var WorkoutInterval = React.createClass({
-  render: function () {
+  var WorkoutInterval = function (props) {
     var
-      workoutInterval = this.props.workoutInterval,
+      workoutInterval = props.workoutInterval,
       intervalType = workoutInterval.intervalType,
       miCoachZone = workoutInterval.miCoachZone,
       time = Helpers.secondsTosHHMMSS(workoutInterval.totalTimeInZone);
 
     return (
-      <div className={'workout-interval type-' + intervalType} style={{width: this.props.proportionalWidth + '%'}}>
-          <div className={'zone zone-' + miCoachZone} title={time}><span>{this.props.workoutInterval.firstOfType && time}</span></div>
+      <div className={`workout-interval type-${intervalType}`} style={{width: `${props.proportionalWidth}%`}}>
+          <div className={`zone zone-${miCoachZone}`} title={time}><span>{props.workoutInterval.firstOfType && time}</span></div>
       </div>
     );
   }
-});
 
-$(document).ready(function(){
-  ReactDOM.render(<WorkoutsPage  url="/api/workouts" />, document.getElementById('container'));
-});
+  $(document).ready(function(){
+    ReactDOM.render(<WorkoutsPage  url="/api/workouts" />, document.getElementById('container'));
+  });
 
 }());

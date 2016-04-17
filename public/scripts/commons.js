@@ -1,11 +1,11 @@
 var EventEmitter = {
     _events: {},
-    dispatch: function (event, data) {
+    dispatch (event, data) {
         if (!this._events[event]) return; // no one is listening to this event
         for (var i = 0; i < this._events[event].length; i++)
             this._events[event][i](data);
     },
-    subscribe: function (event, callback) {
+    subscribe (event, callback) {
       if (!this._events[event]) this._events[event] = []; // new event
       this._events[event].push(callback);
     }
@@ -15,8 +15,8 @@ var DATEFORMAT = 'ddd DD of MMM of YYYY';
 var TODAY = moment().format(DATEFORMAT);
 var
   Helpers = {
-    secondsTosHHMMSS: function ( seconds ) {
-      var
+    secondsTosHHMMSS ( seconds ) {
+      let
         hours = Math.floor( seconds / 3600 ),
         minutes = Math.floor( seconds / 60 ),
         secs = seconds,

@@ -40,8 +40,13 @@ some important steps.
   * The app highlights the nearest next training. done
   * The app center the training lists in the nearest next training. bug
   * the app have hardcoded the race day. done
+2  Apply Presentational/Container component division.
+  * Apply Presentational/Container component division.
+  * The app center the training lists in the nearest next training. fix
+  * Apply some ES6 syntax (destructuring, literal objects enhancing, template strings, let....)
 
 ##backlog
+* Try to use a single-feature focused ajax library like Axios.
 * Use Flux.
 * Migrate to Redux.
 * Add urls with react-router.
