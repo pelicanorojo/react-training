@@ -1,74 +1,27 @@
 (function () {
   let
-    EventEmitter = window.EventEmitter,
+    WorkoutsStore = window.WorkoutsStore,
     DATEFORMAT = window.DATEFORMAT,
     TODAY = window.TODAY,
-    Helpers = window.Helpers,
-    LASTWORKOUTTARGETDATE = moment("2016-06-19T00:00:00");
+    Helpers = window.Helpers;
 
+  let getStateFromStores = function () {
+    return {
+      workoutsDates: WorkoutsStore.getWorkoutsDates(),
+      selectedWorkoutInd: WorkoutsStore.getSelectedWorkoutInd(),
+      selectedWorkout: WorkoutsStore.getSelectedWorkout()
+    };
+  };
 
   let WorkoutsPage = React.createClass({
     getInitialState () {
-      return {
-        workoutsDates: [],
-        selectedWorkout: null,
-        selectedWorkoutInd: null
-      };
+      return getStateFromStores()
     },
-    loadWorkoutDetail (workoutInd) {
-      this.setState({selectedWorkoutInd: workoutInd});
-
-      $.ajax({
-        url: this.props.url + '/' + workoutInd,
-        dataType: 'json',
-        cache: false,
-        success: function(data) {
-          data.scheduledDate = moment(moment(data.scheduledDate).toDate().getTime() + this.state.raceShift, 'x');
-          this.setState({selectedWorkout: data})
-        }.bind(this),
-        error: function(xhr, status, err) {
-          console.error(this.props.detailUrl, status, err.toString());
-        }.bind(this)
-      });
+    _onChange () {
+      this.setState(getStateFromStores());
     },
     componentDidMount () {
-      EventEmitter.subscribe( 'onSelectWorkout', this.loadWorkoutDetail );
-
-      $.ajax({
-        url: this.props.url,
-        dataType: 'json',
-        cache: false,
-        success: function(data) {
-          let lastWorkout = data[0];
-          let raceShift = moment(LASTWORKOUTTARGETDATE).diff(lastWorkout.scheduledDate);
-          _.each(data, function(workoutDate) {
-            workoutDate.scheduledDate = moment(moment(workoutDate.scheduledDate).toDate().getTime() + raceShift, 'x');
-          });
-
-          this.setState({workoutsDates: data, raceShift: raceShift});
-          let nearestWorkoutInd = this.findTodayOrNextWorkout()
-          EventEmitter.dispatch( 'onSelectWorkout', nearestWorkoutInd);
-        }.bind(this),
-        error: function(xhr, status, err) {
-          console.error(this.props.url, status, err.toString());
-        }.bind(this)
-      });
-    },
-    findTodayOrNextWorkout () {
-      let today = moment(moment().format('YYYY-MM-DD')).format('x');
-      let workoutsDates = this.state.workoutsDates;
-      let i = workoutsDates.length - 1;
-      let workoutDate, nearestWorkout;
-
-      while ( i >= 0 && !nearestWorkout ) {
-        workoutDate = workoutsDates[i];
-        if ( moment(workoutDate.scheduledDate).format('x') >= today ) {
-          nearestWorkout = workoutDate;
-        }
-        i--;
-      }
-
-      return nearestWorkout && nearestWorkout.workoutInd || 0;
+      WorkoutsStore.addChangeListener(this._onChange);
     },
     render () {
       return (
@@ -96,7 +49,7 @@
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand" href="#">Project name</a>
+            <a className="navbar-brand" href="#">Running Traning (React Inside)</a>
           </div>
           <div id="navbar" className="navbar-collapse collapse">
             <ul className="nav navbar-nav navbar-right">
@@ -115,6 +68,13 @@
   }
 
   let WorkoutsSidebarContainer = React.createClass({
+    _onChange () {
+      var selectedWorkoutInd = getStateFromStores().selectedWorkoutInd;
+      this.changeWorkoutSelected( selectedWorkoutInd );
+    },
+    componentDidMount () {
+      WorkoutsStore.addChangeListener(this._onChange);
+    },
     changeWorkoutSelected (ind) {
       let
         el = ReactDOM.findDOMNode(this),
@@ -128,9 +88,6 @@
 
         $el.scrollTop( top - height/2);
       }
-    },
-    componentDidMount () {
-      EventEmitter.subscribe( 'onSelectWorkout', this.changeWorkoutSelected );
     },
     render () {
       let
@@ -162,11 +119,11 @@
     }
   });
 
+  let WorkoutActionsCreators = window.WorkoutActionsCreators;
+
   let WorkoutsListContainer = React.createClass({
     changeWorkout ( ind ) {
-      console.log( "D: componentDidUpdate", this.props);
-      console.log("changeWorkout", ind, arguments);
-      EventEmitter.dispatch( 'onSelectWorkout', ind);
+      WorkoutActionsCreators.selectWorkoutByInd(ind);
     },
     render () {
       return (
@@ -178,6 +135,7 @@
         );
       }
   });
+
 
   let WorkoutsList = function (props) {
     let
@@ -206,6 +164,7 @@
     );
   };
 
+
   let MainContent = function (props) {
     let
       detail;
@@ -222,6 +181,7 @@
       </div>
     );
   }
+
 
   let EmptyWorkoutDetail = function () {
     return (
@@ -248,11 +208,13 @@
     );
   }
 
+
   let WorkoutTitle = function (props) {
     return (
       <h1 className="page-header">{props.workoutTitle}</h1>
     );
   }
+
 
   let WorkoutIntervals = function (props) {
     let
@@ -300,4 +262,6 @@
     ReactDOM.render(<WorkoutsPage  url="/api/workouts" />, document.getElementById('container'));
   });
 
+  var WebApiUtils = window.WebApiUtils;
+  WebApiUtils.getAllWorkouts( true );
 }());
