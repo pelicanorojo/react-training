@@ -40,20 +40,29 @@ some important steps.
   * The app highlights the nearest next training. done
   * The app center the training lists in the nearest next training. bug
   * the app have hardcoded the race day. done
+
 2  Apply Presentational/Container component division.
   * Apply Presentational/Container component division.
   * The app center the training lists in the nearest next training. fix
   * Apply some ES6 syntax (destructuring, literal objects enhancing, template strings, let....)
 
+3 Apply Flux Architecture. ( Some ideas was picked from this sample: https://github.com/facebook/flux/tree/master/examples/flux-chat )
+  * Create stores (one by now).
+  * Create actions creator.
+  * Create the Application Actions Dispatcher.  
+  * Listen to store change events ( in container views ).
+  * Trigger workouts load on startup.
+  * Create a restapi utility.
+  * Preserve prior behaviors (scroll left panel on select).
+
 ##backlog
 * Try to use a single-feature focused ajax library like Axios.
-* Use Flux.
 * Migrate to Redux.
 * Add urls with react-router.
 * Add more trainings ( 10Km race for 2 3 months, 21k and more 42k trainings)
 * Add a training importer.
 * Add a training switch.
-* Let edit the race day.
+* Let edit the race day (datepicker)
 * Support serverside prerendering.
 * Customize Babel.
 * Add a module system (Webpack or Browserify).
