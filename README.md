@@ -46,7 +46,7 @@ some important steps.
   * The app center the training lists in the nearest next training. fix
   * Apply some ES6 syntax (destructuring, literal objects enhancing, template strings, let....)
 
-3 Apply Flux Architecture. ( Some ideas was picked from this sample: https://github.com/facebook/flux/tree/master/examples/flux-chat )
+3 Apply Flux Architecture. ( Some ideas were picked from this sample: https://github.com/facebook/flux/tree/master/examples/flux-chat )
   * Create stores (one by now).
   * Create actions creator.
   * Create the Application Actions Dispatcher.  
