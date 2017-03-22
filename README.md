@@ -55,6 +55,28 @@ some important steps.
   * Create a restapi utility.
   * Preserve prior behaviors (scroll left panel on select).
 
+4 Use Gulp, customize Babel, proprocess js, host on Heroku.
+https://trainingrunandreact.herokuapp.com/
+
+next 5 Apply Redux Architecture. ( https://www.youtube.com/watch?v=1w-oQ-i1XB8)
+  Preserve this:
+  * Create stores (one by now).
+  * Create actions creator.
+  * Create the Application Actions Dispatcher.  
+  * Listen to store change events ( in container views ).
+  * Trigger workouts load on startup.
+  * Create a restapi utility.
+  * Preserve prior behaviors (scroll left panel on select).
+
+6 * Add Mocha and Chai, or the tool needed for react app testing.(http://stateofjs.com/2016/testing/)
+
+7 Add some functionality.
+* Add persistence.
+* Let edit the race day (datepicker) 
+* Add a training switch.
+
+* Add trainer notes.
+
 ##backlog
 * Try to use a single-feature focused ajax library like Axios.
 * Migrate to Redux.
@@ -64,12 +86,13 @@ some important steps.
 * Add a training switch.
 * Let edit the race day (datepicker)
 * Support serverside prerendering.
-* Customize Babel.
+* Add persistence.
+* done -Customize Babel.
 * Add a module system (Webpack or Browserify).
 * Add Mocha and Chai, or the tool needed for react app testing.
 * Add trainer notes.
-* Add Gulp.
-* Host in some PaaS.
+* done - Add Gulp.
+* done - Host in some PaaS.
 
 ## License
 
