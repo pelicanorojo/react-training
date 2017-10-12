@@ -47,7 +47,7 @@ const CHANGE_EVENT = "change";
 
 const _WorkoutsState = {
   raceShift: null, // NOTE: this is a derived data, depends on LASTWORKOUTTARGETDATE and last workout in workoutDates in its.
-  LASTWORKOUTTARGETDATE: moment("2016-06-19T00:00:00"), //TODO: select with a day picker
+  LASTWORKOUTTARGETDATE: moment("2017-10-14T00:00:00"), //TODO: select with a day picker
   workoutsDates: [],
   selectedWorkoutInd: null,
   selectedWorkout: null
