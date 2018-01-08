@@ -2,8 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var app = express();
-var planFileName = '42k-0240-4wobyweek-5months';
-var WORKOUTS_FILE = path.join(__dirname, `/public/plans/${planFileName}.json`);
+var WORKOUTS_FILE = path.join(__dirname, '/public/plans/42k-0240-4wobyweek-5months.json');
 var rawData = null;
 var workoutsDates = null;
 
