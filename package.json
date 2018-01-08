@@ -1,7 +1,7 @@
 {
   "name": "react-run-training",
   "version": "0.0.0",
-  "description": "Code for try react with a runner training app.",
+  "description": "Code for try react with a runner training app",
   "main": "server.js",
   "dependencies": {
     "express": "^4.4.5"
