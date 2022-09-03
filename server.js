@@ -18,7 +18,8 @@ fs.readFile(WORKOUTS_FILE, function(err, data) {
     return {
       scheduledDate: workout.scheduledDate,
       workoutId: workout.workoutId,
-      workoutInd: ind
+      workoutInd: ind,
+      workoutOrder: workout.order
     }
   });
 
