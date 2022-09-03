@@ -25,7 +25,13 @@ fs.readFile(WORKOUTS_FILE, function(err, data) {
 });
 
 app.set('port', (process.env.PORT || 3000));
+
 app.use('/', express.static(path.join(__dirname, 'public')));
+
+app.get('/version', function(req, res) {
+  res.setHeader('Cache-Control', 'no-cache');
+  res.json({version: 'Half MDQ 2022'});
+});
 
 app.get('/api/workouts', function(req, res) {
   res.setHeader('Cache-Control', 'no-cache');
