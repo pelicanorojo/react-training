@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var app = express();
-var WORKOUTS_FILE = path.join(__dirname, '/public/plans/21k-0100-4wobyweek-5months.json');
+var WORKOUTS_FILE = path.join(__dirname, '/public/plans/21k-0110-4wobyweek-5months.json');
 var rawData = null;
 var workoutsDates = null;
 
